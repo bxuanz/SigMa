@@ -630,28 +630,9 @@ def get_1d_rotary_pos_embed(
         # [SigMa core logic]
         # -----------------------------------------------------------
         if sigma:
-            # 1. 调度器: 使用 scale_val (64.0) 来计算中心点
-            # 注意：如果你的 get_adaptive_scale 内部是基于 scale 的，
-            # 这里的 scale_val 变大了，t_center 会变小 (相变会更早)，这也是合理的。
             adaptive_alpha = get_adaptive_scale(current_timestep, scale_val)
-            
-            # [Track 2: 强度计算] 
-            # 关键点来了！我们不能用 log2(64)=6.0，太强了。
-            # 我们需要 log2(4)=2.0。
-            # 所以这里我们手动换算一下“物理倍率”：
-            REAL_RES_BASE = 64
-            physical_scale = max_pe_len.item() / REAL_RES_BASE
-            physical_scale = max(1.0, physical_scale)
-            
-            # 这样算出来的 intensity 就是 2.0 (对应 4K)
-            beta_intensity = max(1.0, math.log2(physical_scale))
-            
-            # 计算最终 Boost
-            beta_boost = beta_intensity * adaptive_alpha
-            
-            # 应用 Boost
-            beta_0 = beta_0 ** beta_boost
-            beta_1 = beta_1 ** beta_boost
+            beta_0 = beta_0 * adaptive_alpha
+            beta_1 = beta_1 * adaptive_alpha
         
         low, high = find_correction_range(beta_0, beta_1, dim, theta, ori_max_pe_len)
         low = max(0, low)
@@ -661,12 +642,8 @@ def get_1d_rotary_pos_embed(
         freqs = freqs_linear * (1 - freqs_mask) + freqs_ntk * freqs_mask
 
         if sigma:
-            # Gamma: 保持 1.0 (不增强，解决多头)
-            gamma_intensity = 0.9
-            gamma_boost = gamma_factor * adaptive_alpha
-
-            gamma_0 = gamma_0 ** gamma_boost
-            gamma_1 = gamma_1 ** gamma_boost
+            gamma_0 = gamma_0 * adaptive_alpha
+            gamma_1 = gamma_1 * adaptive_alpha
 
         low, high = find_correction_range(gamma_0, gamma_1, dim, theta, ori_max_pe_len)
         low = max(0, low)

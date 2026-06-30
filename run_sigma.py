@@ -49,8 +49,10 @@ def main():
 
     use_sigma = not args.no_sigma
 
+    model_path = "/nas/zbx/1/hf_weights/hub/models--black-forest-labs--FLUX.1-Krea-dev/snapshots/8162a9c7b05a641be098422bf2fcf335615c2f28"
+
     transformer = FluxTransformer2DModel.from_pretrained(
-        'black-forest-labs/FLUX.1-Krea-dev',
+        model_path,
         subfolder='transformer',
         torch_dtype=torch.bfloat16,
         sigma=use_sigma,
@@ -58,7 +60,7 @@ def main():
     )
 
     pipe = FluxPipeline.from_pretrained(
-        'black-forest-labs/FLUX.1-Krea-dev',
+        model_path,
         transformer=transformer,
         torch_dtype=torch.bfloat16,
     )
