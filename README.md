@@ -1,11 +1,12 @@
 # SigMa
 
-
 **SigMa enables pre-trained diffusion transformers to generate ultra-high-resolution images far beyond their training scale.** It dynamically adjusts positional encodings according to both image scale and denoising timestep, matching the model's evolving frequency needs during sampling and achieving faithful 4K × 4K generation without retraining or extra sampling cost.
+
+📄 **Paper:** [SigMa: Sigmoid Modulation for Ultra High Resolution Diffusion](https://openreview.net/forum?id=47JZSOkw5C)
 
 <img src="docs/assets.png" alt="SigMa Results" width="100%">
 
-## Installation
+## 📦 Installation
 
 ```bash
 conda create -n sigma python=3.10
@@ -13,13 +14,13 @@ conda activate sigma
 pip install -r requirements.txt
 ```
 
-## Usage
+## 🚀 Usage
 
 ```bash
 python run_sigma.py --prompt "Your text prompt here"
 ```
 
-Key arguments:
+### 🧭 Key Arguments
 
 | Argument | Default | Description |
 |----------|---------|-------------|
@@ -32,7 +33,7 @@ Key arguments:
 | `--no_sigma` | `False` | Disable SigMa and run the underlying positional method directly |
 | `--output_dir` | `outputs` | Directory for generated images |
 
-Example:
+### 🧪 Example
 
 ```bash
 # 4K SigMa example
@@ -44,3 +45,16 @@ python run_sigma.py \
 
 Generated images are saved to the selected `output_dir`.
 
+
+## 📚 Citation
+
+```bibtex
+@inproceedings{
+zhao2026sigma,
+title={\${\textbackslash}sigma\$: Sigmoid Modulation for Ultra High Resolution Diffusion},
+author={Bingxuan Zhao and Qing Zhou and Yu Wang and Chuang Yang and Qi Wang},
+booktitle={Forty-third International Conference on Machine Learning},
+year={2026},
+url={https://openreview.net/forum?id=47JZSOkw5C}
+}
+```
